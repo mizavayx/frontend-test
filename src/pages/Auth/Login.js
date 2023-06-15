@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { useLogin } from '../../hooks/useLogin';
+
 import Layout from './../../components/Layout/Layout';
 import '../../styles/AuthStyles.css';
-import { useLogin } from '../../hooks/useLogin';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -15,7 +16,7 @@ const Login = () => {
   };
 
   return (
-    <Layout title="Register - StudentManagement App">
+    <Layout title="Register - Student Management App">
       <div className="form-container ">
         <form onSubmit={handleSubmit}>
           <h4 className="title">LOGIN FORM</h4>
@@ -42,7 +43,11 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary">
+          <button
+            disabled={isLoading}
+            type="submit"
+            className="btn btn-primary"
+          >
             LOGIN
           </button>
         </form>
