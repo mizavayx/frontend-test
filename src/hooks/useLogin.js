@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useAuthContext } from './useAuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import toast from 'react-hot-toast';
 
 export const useLogin = () => {
   const [error, setError] = useState(null);
@@ -21,27 +20,20 @@ export const useLogin = () => {
         password,
       });
 
-      console.log(res);
-      if (!res.success) {
-        setIsLoading(false);
-        setError(res.data);
-      }
-      if (res.success) {
-        toast.success(res.data && res.data.message);
-
+      if (res.data.success) {
         // save the user to local storage
-        localStorage.setItem('user', JSON.stringify(res.data));
+        localStorage.setItem('user', JSON.stringify(res.data.data));
         navigate(location.state || '/');
 
         // update the auth context
-        dispatch({ type: 'LOGIN', payload: res });
+        dispatch({ type: 'LOGIN', payload: res.data.data });
 
         // update loading state
         setIsLoading(false);
       }
     } catch (error) {
-      console.log(error);
-      toast.error('Something went wrong');
+      setIsLoading(false);
+      setError(error.response.data.message);
     }
   };
 

@@ -34,7 +34,7 @@
   border-radius: 0;
   background-color: #000;
   color: white;
-  width: 250px;
+  width: 300px;
 }
 
 .form-container form button:hover {
@@ -50,4 +50,8 @@
     #434343,
     #000000
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.form-container form .error {
+  color: red;
 }

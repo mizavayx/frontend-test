@@ -16,7 +16,7 @@ const Login = () => {
   };
 
   return (
-    <Layout title="Register - Student Management App">
+    <Layout title="Login - Student Management App">
       <div className="form-container ">
         <form onSubmit={handleSubmit}>
           <h4 className="title">LOGIN FORM</h4>
@@ -50,6 +50,7 @@ const Login = () => {
           >
             LOGIN
           </button>
+          {error && <div className="error">{error}</div>}
         </form>
       </div>
     </Layout>

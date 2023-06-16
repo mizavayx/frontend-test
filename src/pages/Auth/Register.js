@@ -1,23 +1,24 @@
 import { useState } from 'react';
-import Layout from '../../components/Layout/Layout';
-import { useNavigate } from 'react-router-dom';
+import { useRegister } from '../../hooks/useRegister';
+
+import Layout from './../../components/Layout/Layout';
 import '../../styles/AuthStyles.css';
 
 const Register = () => {
   const [fullname, setFullName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const { register, error, isLoading } = useRegister();
 
   // form function
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(fullname, username, password);
+    await register(fullname, username, password);
   };
 
   return (
-    <Layout title="Register - Ecommer App">
+    <Layout title="Register - Student Management App">
       <div className="form-container ">
         <form onSubmit={handleSubmit}>
           <h4 className="title">REGISTER FORM</h4>
@@ -55,9 +56,14 @@ const Register = () => {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary">
+          <button
+            disabled={isLoading}
+            type="submit"
+            className="btn btn-primary"
+          >
             REGISTER
           </button>
+          {error && <div className="error">{error}</div>}
         </form>
       </div>
     </Layout>
