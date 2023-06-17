@@ -19,6 +19,7 @@ function App() {
         <Route path="/policy" element={<Policy />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/students" element={<StudentsPage />} />
         <Route path="*" element={<Pagenotfound />} />
       </Routes>
     </>
