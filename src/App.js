@@ -7,6 +7,7 @@ import Policy from './pages/Policy';
 import Pagenotfound from './pages/Pagenotfound';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
+import StudentsPage from './pages/StudentsPage';
 
 function App() {
   return (

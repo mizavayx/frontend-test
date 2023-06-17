@@ -1,7 +1,16 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import { useAuthContext } from '../../hooks/useAuthContext';
+import { useLogout } from '../../hooks/useLogout';
 
 const Header = () => {
+  const { logout } = useLogout();
+  const { user } = useAuthContext();
+
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -27,78 +36,71 @@ const Header = () => {
                   Home
                 </NavLink>
               </li>
-              <li className="nav-item dropdown">
-                <Link
-                  className="nav-link dropdown-toggle"
-                  to={'/students'}
-                  data-bs-toggle="dropdown"
-                >
-                  Students
-                </Link>
-                <ul className="dropdown-menu">
-                  <li>
-                    <Link className="dropdown-item" to={'/students'}>
-                      All
-                    </Link>
+              {user && (
+                <>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/students">
+                      Students
+                    </NavLink>
                   </li>
-                  <li>
-                    <Link className="dropdown-item" to={'/students/add'}>
-                      Add
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to={'/students/search'}>
-                      Search
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to={'/students/edit'}>
-                      Edit
-                    </Link>
-                  </li>
-                </ul>
-              </li>
-              <li className="nav-item dropdown">
-                <Link
-                  className="nav-link dropdown-toggle"
-                  to={'/students'}
-                  data-bs-toggle="dropdown"
-                >
+                </>
+              )}
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/classes">
                   Classes
-                </Link>
-                <ul className="dropdown-menu">
-                  <li>
-                    <Link className="dropdown-item" to={'/classes'}>
-                      All
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to={'/classes/add'}>
-                      Create
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to={'/classes/search'}>
-                      Search
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to={'/classes/edit'}>
-                      Edit
-                    </Link>
-                  </li>
-                </ul>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/register" className="nav-link">
-                  Register
                 </NavLink>
               </li>
-              <li className="nav-item">
-                <NavLink to="/login" className="nav-link">
-                  Login
-                </NavLink>
-              </li>
+              {/* User navbar options */}
+              {!user && (
+                <>
+                  <li className="nav-item">
+                    <NavLink to="/register" className="nav-link">
+                      Register
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink to="/login" className="nav-link">
+                      Login
+                    </NavLink>
+                  </li>
+                </>
+              )}
+              {user && (
+                <>
+                  <li className="nav-item dropdown">
+                    <NavLink
+                      className="nav-link dropdown-toggle"
+                      href="#"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      style={{ border: 'none' }}
+                    >
+                      {user?.username}
+                    </NavLink>
+                    <ul className="dropdown-menu">
+                      <li>
+                        <Link
+                          to={`/dashboard/${
+                            user?.isAdmin === true ? 'admin' : 'user'
+                          }`}
+                          className="dropdown-item"
+                        >
+                          Dashboard
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          onClick={handleLogout}
+                          to="/login"
+                          className="dropdown-item"
+                        >
+                          Logout
+                        </Link>
+                      </li>
+                    </ul>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>

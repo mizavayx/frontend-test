@@ -1,5 +1,5 @@
 import { createContext, useReducer, useEffect } from 'react';
-
+import axios from 'axios';
 export const AuthContext = createContext();
 
 export const authReducer = (state, action) => {
@@ -18,12 +18,19 @@ export const AuthContextProvider = ({ children }) => {
     user: null,
   });
 
+  //default axios
+  axios.defaults.headers.common[
+    'Authorization'
+  ] = `Bearer ${state?.user?.token}`;
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
 
     if (user) {
       dispatch({ type: 'LOGIN', payload: user });
     }
+
+    //eslint-disable-next-line
   }, []);
 
   console.log('AuthContext state:', state);

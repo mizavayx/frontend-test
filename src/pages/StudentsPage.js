@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import Layout from './../components/Layout/Layout';
+import Layout from '../components/Layout/Layout';
 import axios from 'axios';
 
-const HomePage = () => {
+const StudentPage = () => {
   const [students, setStudents] = useState('');
 
   useEffect(() => {
@@ -22,16 +22,14 @@ const HomePage = () => {
 
   return (
     <Layout>
-      <div className="home">
-        <div className="students">
-          {students &&
-            students.map((student) => (
-              <p key={student._id}>{student.fullname}</p>
-            ))}
-        </div>
+      <div className="students">
+        {students &&
+          students.map((student) => (
+            <p key={student._id}>{student.fullname}</p>
+          ))}
       </div>
     </Layout>
   );
 };
 
-export default HomePage;
+export default StudentPage;
