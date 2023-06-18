@@ -5,7 +5,7 @@ import Layout from '../components/Layout/Layout';
 import axios from 'axios';
 
 // components
-import StudentListing from '../components/StudentListing';
+import StudentTable from '../components/StudentTable';
 
 const StudentPage = () => {
   const { students, dispatch } = useStudentsContext();
@@ -16,7 +16,6 @@ const StudentPage = () => {
       try {
         const res = await axios.get('/api/v1/students');
 
-        console.log(res.data.data);
         // update the students context
         if (res.data.success) {
           dispatch({ type: 'SET_STUDENTS', payload: res.data.data });
@@ -34,10 +33,11 @@ const StudentPage = () => {
   return (
     <Layout>
       <div className="students">
-        {students &&
-          students.map((student) => (
-            <StudentListing key={student._id} student={student} />
-          ))}
+        {students && (
+          <>
+            <StudentTable students={students} />
+          </>
+        )}
       </div>
     </Layout>
   );
