@@ -29,8 +29,6 @@ export const AuthContextProvider = ({ children }) => {
     if (user) {
       dispatch({ type: 'LOGIN', payload: user });
     }
-
-    //eslint-disable-next-line
   }, []);
 
   console.log('AuthContext state:', state);
