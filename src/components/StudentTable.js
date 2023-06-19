@@ -1,196 +1,81 @@
-import DataTable from 'react-data-table-component';
-import moment from 'moment/moment';
-import axios from 'axios';
+import { BsFillTrashFill, BsFillPencilFill } from 'react-icons/bs';
+import { BiDetail } from 'react-icons/bi';
+import '../styles/TableStyles.css';
+import { useAuthContext } from '../hooks/useAuthContext';
 import { useState } from 'react';
-import DetailsForm from './DetailsForm';
-import EditForm from './EditForm';
+import { TablePagination } from '@mui/material';
 
-const StudentTable = ({ students }) => {
-  const [detailsButton, setDetailsButton] = useState(false);
-  const [editButton, setEditButton] = useState(false);
-  const [student, setStudent] = useState();
-  const [data, setData] = useState();
+function StudentTable({ students, detailStudent, editStudent, deleteStudent }) {
+  const { user } = useAuthContext();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [formState, setFormState] = useState();
+  function handleChangePage(event, newpage) {
+    setPage(newpage);
+  }
 
-  const handleSubmit = (newData) => {
-    student === null
-      ? setData([...data, newData])
-      : setData(
-          data.map((currRow, idx) => {
-            if (idx !== student) return currRow;
-
-            return newData;
-          })
-        );
-  };
-
-  const handleChange = (e) => {
-    setFormState({ ...formState, [e.target.name]: e.target.value });
-  };
-  // DataTable configs
-  const columns = [
-    {
-      name: 'Student Name',
-      selector: (row) => row.name,
-      sortable: true,
-      sortField: 'fullname',
-    },
-    {
-      name: 'Class',
-      selector: (row) => row.class,
-    },
-    {
-      name: 'School Year',
-      selector: (row) => row.schoolYear,
-    },
-    {
-      cell: (row) => (
-        <>
-          <button
-            style={{ padding: '0px 10px', margin: '5px' }}
-            onClick={() => {
-              setStudent(students.find((x) => x._id === row.id));
-              setDetailsButton(true);
-            }}
-          >
-            Details
-          </button>
-          <DetailsForm
-            trigger={detailsButton}
-            setTrigger={setDetailsButton}
-            setStudent={setStudent}
-          >
-            <h2>Student details</h2>
-            <p>
-              <strong>ID: </strong>
-              {student?._id}
-            </p>
-            <p>
-              <strong>Full name: </strong>
-              {student?.fullname}
-            </p>
-            <p>
-              <strong>Gender: </strong>
-              {student?.gender}
-            </p>
-            <p>
-              <strong>Class: </strong>
-              {student?.class === null ? 'None' : student?.class}
-            </p>
-            <p>
-              <strong>School year: </strong>
-              {student?.schoolYear}
-            </p>
-            <p>
-              <strong>Email: </strong>
-              {student?.email === null ? 'None' : student?.email}
-            </p>
-            <p>
-              <strong>Date of birth: </strong>
-              {moment(student?.dob).utc().format('DD-MM-YYYY')}
-            </p>
-          </DetailsForm>
-
-          <button
-            style={{ padding: '0px 10px', margin: '5px' }}
-            onClick={() => {
-              setStudent(students.find((x) => x._id === row.id));
-              setEditButton(true);
-              setFormState(student && { ...student });
-            }}
-          >
-            Edit
-          </button>
-          <EditForm trigger={editButton} setTrigger={setEditButton}></EditForm>
-        </>
-      ),
-    },
-  ];
-  const tableData = students.map((student) => {
-    return {
-      id: student._id,
-      name: student.fullname,
-      schoolYear: student.schoolYear,
-      class: student.class === null ? 'None' : student.class,
-    };
-  });
-
-  const customStyles = {
-    rows: {
-      hover: { backgroundColor: '#eee' },
-      style: {
-        minHeight: '72px',
-        fontSize: '20px',
-        borderTopWidth: '1px',
-        borderTopStyle: 'solid',
-        borderBottomWidth: '2px',
-      },
-    },
-    headCells: {
-      style: {
-        fontWeight: 'bold',
-        paddingLeft: '8px',
-        paddingRight: '8px',
-        fontSize: '20px',
-        backgroundColor: '#ccc',
-        color: '#222',
-      },
-    },
-
-    cells: {
-      style: {
-        paddingLeft: '8px',
-        paddingRight: '8px',
-      },
-    },
-    table: {
-      style: {
-        display: 'block',
-        overflow: 'hidden',
-        tableLayout: 'fixed',
-        borderCollapse: 'collapse',
-        boxShadow: '0px 10px 10px #ccc',
-        borderRadius: '10px',
-        whiteSpace: 'nowrap',
-        width: '70%',
-        maxWidth: '80%',
-        height: '70%',
-        marginTop: '50px',
-        marginLeft: '50px',
-        overflowX: 'auto',
-        borderWidth: '1px',
-        borderStyle: 'solid',
-      },
-    },
-    pagination: {
-      style: {
-        minHeight: '40px',
-        width: '70%',
-        height: '70%',
-        marginLeft: '50px',
-      },
-      pageButtonsStyle: {
-        borderRadius: '50%',
-        height: '40px',
-        width: '40px',
-        padding: '8px',
-        margin: 'px',
-        cursor: 'pointer',
-      },
-    },
-  };
+  function handleChangeRowsPerPage(event) {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  }
 
   return (
-    <>
-      <DataTable
-        columns={columns}
-        data={tableData}
-        pagination
-        customStyles={customStyles}
+    <div className="table-wrapper">
+      <table className="table">
+        <thead>
+          <tr>
+            <th className="fullname">Full name</th>
+            <th className="class">Class</th>
+            <th className="schoolyear">School Year</th>
+            <th className="fit">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((student) => {
+              return (
+                <tr key={student._id}>
+                  <td className="fullname">{student.fullname}</td>
+                  <td className="class">
+                    {student.class === null ? 'None' : student.class}
+                  </td>
+                  <td className="schoolyear">{student.schoolYear}</td>
+                  <td className="fit">
+                    <span className="actions">
+                      <BiDetail
+                        className="details-btn"
+                        onClick={() => detailStudent(student._id)}
+                      />
+                      <BsFillPencilFill
+                        className="edit-btn"
+                        onClick={() => editStudent(student._id)}
+                      />
+                      {user.isAdmin && (
+                        <BsFillTrashFill
+                          className="delete-btn"
+                          onClick={() => deleteStudent(student._id)}
+                        />
+                      )}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
+        </tbody>
+      </table>
+      <TablePagination
+        className="pagination-bar"
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={students.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
       />
-    </>
+    </div>
   );
-};
+}
 
 export default StudentTable;

@@ -11,16 +11,26 @@
   align-items: center;
 }
 
+hr {
+  width: 70%;
+  height: 3px;
+  background: black;
+  border-color: black;
+  color: black;
+}
+
 .form-inner {
-  position: relative;
   padding: 32px;
   width: 100%;
   max-width: 640px;
   background-color: #fff;
+  border-radius: 5px;
+  display: grid;
 }
 
 .form-inner .close-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
+  padding: 0px 7px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: auto;
 }
